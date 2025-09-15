@@ -151,7 +151,7 @@ class WeeklyReportGenerator {
    * レポート内容を生成
    */
   generateReportContent(stats, data) {
-    const report = `# 🏋️ FIT PLACE24 週次分析レポート
+    const report = `# 🏋️ My Gym 週次分析レポート
 
 **生成日時**: ${new Date(stats.lastUpdated).toLocaleDateString('ja-JP', {
       year: 'numeric',

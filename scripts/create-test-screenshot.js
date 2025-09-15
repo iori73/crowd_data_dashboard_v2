@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 
 /**
- * テスト用のFIT PLACE24風スクリーンショット画像を生成
+ * テスト用のMy Gym風スクリーンショット画像を生成
  */
 
 import { writeFileSync } from 'fs';
 
-// SVGでFIT PLACE24風のテスト画像を生成
+// SVGでMy Gym風のテスト画像を生成
 function createTestScreenshot(count, status, time, date) {
   const svg = `<?xml version="1.0" encoding="UTF-8"?>
 <svg width="400" height="300" xmlns="http://www.w3.org/2000/svg">
@@ -15,7 +15,7 @@ function createTestScreenshot(count, status, time, date) {
   
   <!-- ヘッダー -->
   <rect width="400" height="60" fill="#007bff"/>
-  <text x="200" y="35" text-anchor="middle" fill="white" font-family="Arial" font-size="18" font-weight="bold">FIT PLACE24</text>
+  <text x="200" y="35" text-anchor="middle" fill="white" font-family="Arial" font-size="18" font-weight="bold">My Gym</text>
   
   <!-- 混雑状況エリア -->
   <rect x="20" y="80" width="360" height="180" fill="white" stroke="#dee2e6" stroke-width="1" rx="8"/>

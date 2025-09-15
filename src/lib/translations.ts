@@ -3,7 +3,7 @@ export type Language = 'ja' | 'en'
 export const translations = {
   ja: {
     // Header
-    dashboardTitle1: 'FIT PLACE24',
+    dashboardTitle1: 'My Gym',
     dashboardTitle2: '混雑状況ダッシュボード',
     dashboardSubtitle: 'リアルタイム混雑状況の分析と可視化',
     refresh: '更新',
@@ -54,7 +54,7 @@ export const translations = {
   },
   en: {
     // Header
-    dashboardTitle1: 'FIT PLACE24',
+    dashboardTitle1: 'My Gym',
     dashboardTitle2: 'Crowd Status Dashboard',
     dashboardSubtitle: 'Real-time crowd analysis and visualization',
     refresh: 'Refresh',
