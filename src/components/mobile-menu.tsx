@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react'
 import { X, Download, Globe, Palette } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { Language, useTranslation } from '@/lib/translations'
+import { Language } from '@/lib/translations'
 import { FilterState } from '@/lib/dataProcessor'
 import { useTheme } from 'next-themes'
 
@@ -27,12 +27,7 @@ export function MobileMenu({
   onLanguageChange,
   onExportCSV,
   dataLength,
-  currentFilter,
-  onQuickFilter,
-  chartType,
-  onChartTypeChange
 }: MobileMenuProps) {
-  const { t } = useTranslation(currentLanguage)
   const { theme, setTheme } = useTheme()
   const [shouldRender, setShouldRender] = useState(false)
   const [isAnimating, setIsAnimating] = useState(false)
@@ -92,7 +87,7 @@ export function MobileMenu({
           style={{
             willChange: 'transform',
             backfaceVisibility: 'hidden',
-            transform3d: 'translateZ(0)'
+            transform: 'translateZ(0)'
           }}
         >
           <div className="flex flex-col h-full">

@@ -22,7 +22,6 @@ const languages = [
 ]
 
 export function LanguageSwitcher({ currentLanguage, onLanguageChange }: LanguageSwitcherProps) {
-  const currentLang = languages.find(lang => lang.code === currentLanguage)
 
   return (
     <DropdownMenu>

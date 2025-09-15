@@ -177,7 +177,7 @@ export function WeeklyChart({ data, type = 'line', language = 'ja' }: WeeklyChar
 
   return (
     <div className="w-full h-[300px] p-4 bg-white rounded-lg shadow-sm border">
-      <ChartComponent data={chartData} options={options as any} />
+      <ChartComponent data={chartData} options={options} />
     </div>
   )
 }

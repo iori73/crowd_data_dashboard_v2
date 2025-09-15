@@ -128,7 +128,7 @@ export class DataProcessor {
 
       for (let hour = 0; hour < 24; hour++) {
         const counts = hourMap.get(hour) || [];
-        const avgCount = counts.length > 0 ? counts.reduce((a, b) => a + b, 0) / counts.length : 0;
+        const avgCount = counts.length > 0 ? counts.reduce((a: number, b: number) => a + b, 0) / counts.length : 0;
 
         hoursData.push({
           hour,

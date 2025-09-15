@@ -50,7 +50,7 @@ export default function DashboardPage() {
     } finally {
       setLoading(false)
     }
-  }, [dataLoader])
+  }, [dataLoader, t])
 
   const handleFilterChange = (startDate: Date | null, endDate: Date | null) => {
     if (startDate && endDate) {
@@ -269,7 +269,7 @@ export default function DashboardPage() {
           <>
             {/* Statistics Cards */}
             {overallStats && (
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
                 <StatisticsCard
                   title={t('totalRecords')}
                   value={overallStats.totalRecords.toLocaleString()}
