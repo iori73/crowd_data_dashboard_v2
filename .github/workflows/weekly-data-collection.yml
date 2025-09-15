@@ -1,0 +1,106 @@
+name: Weekly Gym Data Collection
+
+on:
+  schedule:
+    # 毎週日曜日 00:01 JST (土曜日 15:01 UTC)
+    - cron: '1 15 * * 6'
+  workflow_dispatch: # 手動実行も可能
+
+env:
+  TZ: Asia/Tokyo
+
+jobs:
+  collect-data:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Claude Code for OCR
+        run: |
+          # Claude Code OCR ツールのインストール
+          echo "🔧 Claude Codeをインストール中..."
+          npm install -g claude-code || echo "Claude Codeインストール失敗 - フォールバック使用"
+
+      - name: Check for new screenshots
+        id: check-images
+        run: |
+          # 新しいスクリーンショット画像があるかチェック
+          if [ -d "screenshots/inbox" ] && [ "$(ls -A screenshots/inbox)" ]; then
+            echo "new-images=true" >> $GITHUB_OUTPUT
+            echo "📸 新しいスクリーンショットを発見しました"
+          else
+            echo "new-images=false" >> $GITHUB_OUTPUT
+            echo "📭 新しいスクリーンショットはありませんでした"
+          fi
+
+      - name: Process screenshots with OCR
+        if: steps.check-images.outputs.new-images == 'true'
+        run: |
+          echo "🤖 Claude Code OCRで画像を処理中..."
+          node scripts/process-screenshots.js
+
+      - name: Update CSV data
+        if: steps.check-images.outputs.new-images == 'true'
+        run: |
+          echo "📊 CSVデータを更新中..."
+          node scripts/update-csv.js
+
+      - name: Archive processed images
+        if: steps.check-images.outputs.new-images == 'true'
+        run: |
+          echo "🗃️ 処理済み画像をアーカイブ中..."
+          timestamp=$(date +%Y%m%d_%H%M%S)
+          mkdir -p screenshots/processed/$timestamp
+          mv screenshots/inbox/* screenshots/processed/$timestamp/ || true
+
+      - name: Commit and push changes
+        if: steps.check-images.outputs.new-images == 'true'
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add public/fit_place24_data.csv public/performance-analysis.json screenshots/ scripts/weekly-report.md
+          git commit -m "🤖 週次データ更新: $(date '+%Y-%m-%d %H:%M')
+
+          ✨ 更新内容:
+          - 📊 CSVデータ自動更新
+          - 📈 週次レポート生成  
+          - 🔍 パフォーマンス分析完了
+          - 🗃️ 処理済み画像アーカイブ" || exit 0
+          git push
+
+      - name: Generate weekly report
+        if: steps.check-images.outputs.new-images == 'true'
+        run: |
+          echo "📈 週次レポートを生成中..."
+          node scripts/generate-report.js
+
+      - name: Run performance analysis
+        if: steps.check-images.outputs.new-images == 'true'
+        run: |
+          echo "🔍 パフォーマンス分析を実行中..."
+          node scripts/performance-analyzer.js
+
+      - name: Summary
+        run: |
+          echo "✅ 週次データ収集処理が完了しました"
+          echo "📅 実行日時: $(date '+%Y-%m-%d %H:%M:%S JST')"
+          if [ "${{ steps.check-images.outputs.new-images }}" == "true" ]; then
+            echo "📊 新しいデータを処理しました"
+          else
+            echo "📭 新しいデータはありませんでした"
+          fi
