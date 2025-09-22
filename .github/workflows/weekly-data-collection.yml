@@ -30,11 +30,18 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Install Claude Code for OCR
+      - name: Setup Python OCR Environment
         run: |
-          # Claude Code OCR ツールのインストール
-          echo "🔧 Claude Codeをインストール中..."
-          npm install -g claude-code || echo "Claude Codeインストール失敗 - フォールバック使用"
+          # Python OCR環境のセットアップ
+          echo "🔧 本番用Python OCR環境を準備中..."
+          sudo apt-get update
+          sudo apt-get install -y tesseract-ocr tesseract-ocr-jpn
+          sudo apt-get install -y libgl1-mesa-glx libglib2.0-0
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          echo "✅ Python OCR環境構築完了"
+          echo "📊 Python バージョン: $(python --version)"
+          echo "🔍 Tesseract バージョン: $(tesseract --version | head -1)"
 
       - name: Check for new screenshots
         id: check-images
@@ -48,11 +55,11 @@ jobs:
             echo "📭 新しいスクリーンショットはありませんでした"
           fi
 
-      - name: Process screenshots with OCR
+      - name: Process screenshots with Python OCR
         if: steps.check-images.outputs.new-images == 'true'
         run: |
-          echo "🤖 Claude Code OCRで画像を処理中..."
-          node scripts/process-screenshots.js
+          echo "🤖 本番用Python OCRで画像を処理中..."
+          python scripts/python_ocr_processor.py
 
       - name: Update CSV data
         if: steps.check-images.outputs.new-images == 'true'
@@ -73,15 +80,27 @@ jobs:
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          git add public/fit_place24_data.csv public/performance-analysis.json screenshots/ scripts/weekly-report.md
+          git add public/fit_place24_data.csv screenshots/ scripts/extracted-data.json scripts/weekly-report.md
           git commit -m "🤖 週次データ更新: $(date '+%Y-%m-%d %H:%M')
 
           ✨ 更新内容:
-          - 📊 CSVデータ自動更新
+          - 📊 Python OCRによるデータ抽出
+          - 💾 CSVデータ自動更新
           - 📈 週次レポート生成  
-          - 🔍 パフォーマンス分析完了
-          - 🗃️ 処理済み画像アーカイブ" || exit 0
+          - 🗃️ 処理済み画像アーカイブ
+
+          🤖 Generated with [Claude Code](https://claude.ai/code)
+
+          Co-Authored-By: Claude <noreply@anthropic.com>" || exit 0
           git push
+
+      - name: Handle errors and notifications
+        if: failure()
+        run: |
+          echo "❌ 処理中にエラーが発生しました"
+          echo "📋 GitHub Issueを確認してください"
+          # Create GitHub issue on failure (optional)
+          # gh issue create --title "自動データ収集エラー $(date)" --body "週次データ収集処理でエラーが発生しました。ログを確認してください。"
 
       - name: Generate weekly report
         if: steps.check-images.outputs.new-images == 'true'

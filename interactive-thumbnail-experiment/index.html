@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Thumbnail - Light/Dark Mode</title>
+    <link rel="stylesheet" href="styles/main.css">
+</head>
+<body>
+    <div class="container">
+        <h1>インタラクティブサムネイル実験</h1>
+        
+        <!-- アプローチ1: マウス位置ベース -->
+        <section class="experiment-section">
+            <h2>アプローチ1: マウス位置ベース切り替え</h2>
+            <div class="thumbnail position-based" id="thumbnail1">
+                <div class="content light-content">
+                    <div class="icon">☀️</div>
+                    <h3>ライトモード</h3>
+                    <p>明るい朝のダッシュボード</p>
+                </div>
+                <div class="content dark-content">
+                    <div class="icon">🌙</div>
+                    <h3>ダークモード</h3>
+                    <p>落ち着いた夜のダッシュボード</p>
+                </div>
+                <div class="divider"></div>
+                <div class="cursor-indicator"></div>
+            </div>
+        </section>
+
+        <!-- アプローチ2: ホバー遅延ベース -->
+        <section class="experiment-section">
+            <h2>アプローチ2: ホバー遅延切り替え</h2>
+            <div class="thumbnail hover-delay" id="thumbnail2">
+                <div class="content">
+                    <div class="icon transition-icon">☀️</div>
+                    <h3 class="transition-title">ライトモード</h3>
+                    <p class="transition-subtitle">明るい朝のダッシュボード</p>
+                </div>
+                <div class="progress-bar"></div>
+            </div>
+        </section>
+
+        <!-- アプローチ3: クリック切り替え -->
+        <section class="experiment-section">
+            <h2>アプローチ3: クリック切り替え</h2>
+            <div class="thumbnail click-toggle" id="thumbnail3">
+                <div class="content">
+                    <div class="icon">☀️</div>
+                    <h3>ライトモード</h3>
+                    <p>クリックで切り替え</p>
+                </div>
+                <div class="toggle-hint">クリックして切り替え</div>
+            </div>
+        </section>
+
+        <!-- アプローチ4: 時計インタラクション -->
+        <section class="experiment-section">
+            <h2>アプローチ4: 時計ベースインタラクション</h2>
+            <div class="thumbnail clock-based" id="thumbnail4">
+                <div class="clock-container">
+                    <div class="clock">
+                        <div class="clock-hand" id="clockHand"></div>
+                        <div class="clock-center"></div>
+                    </div>
+                </div>
+                <div class="content">
+                    <div class="icon time-icon">☀️</div>
+                    <h3 class="time-title">朝 9:00</h3>
+                    <p class="time-subtitle">ライトモードで作業開始</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script src="src/main.js"></script>
+</body>
+</html>
