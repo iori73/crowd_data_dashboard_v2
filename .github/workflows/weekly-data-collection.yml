@@ -30,15 +30,21 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
       - name: Setup Python OCR Environment
         run: |
           # Python OCR環境のセットアップ
           echo "🔧 本番用Python OCR環境を準備中..."
           sudo apt-get update
           sudo apt-get install -y tesseract-ocr tesseract-ocr-jpn
-          sudo apt-get install -y libgl1-mesa-glx libglib2.0-0
+          sudo apt-get install -y libgl1-mesa-glx libglib2.0-0 libsm6 libxext6 libfontconfig1 libxrender1
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
+          pip install --no-cache-dir -r requirements.txt
           echo "✅ Python OCR環境構築完了"
           echo "📊 Python バージョン: $(python --version)"
           echo "🔍 Tesseract バージョン: $(tesseract --version | head -1)"
