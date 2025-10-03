@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-      
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -42,7 +42,7 @@ jobs:
           echo "🔧 本番用Python OCR環境を準備中..."
           sudo apt-get update
           sudo apt-get install -y tesseract-ocr tesseract-ocr-jpn
-          sudo apt-get install -y libgl1-mesa-glx libglib2.0-0 libsm6 libxext6 libfontconfig1 libxrender1
+          sudo apt-get install -y libgl1-mesa-dev libglib2.0-0 libsm6 libxext6 libfontconfig1 libxrender1
           python -m pip install --upgrade pip
           pip install --no-cache-dir -r requirements.txt
           echo "✅ Python OCR環境構築完了"
@@ -91,7 +91,7 @@ jobs:
           [ -d "screenshots/" ] && git add screenshots/
           [ -f "scripts/extracted-data.json" ] && git add scripts/extracted-data.json
           [ -f "scripts/weekly-report.md" ] && git add scripts/weekly-report.md
-          
+
           # Only commit if there are changes
           if ! git diff --cached --exit-code > /dev/null; then
             COMMIT_DATE=$(date '+%Y-%m-%d %H:%M')
