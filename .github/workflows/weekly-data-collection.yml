@@ -89,17 +89,7 @@ jobs:
           # Only commit if there are changes
           if ! git diff --cached --exit-code > /dev/null; then
             COMMIT_DATE=$(date '+%Y-%m-%d %H:%M')
-            git commit -m "🤖 週次データ更新: ${COMMIT_DATE}
-
-✨ 更新内容:
-- 📊 Python OCRによるデータ抽出
-- 💾 CSVデータ自動更新
-- 📈 週次レポート生成  
-- 🗃️ 処理済み画像アーカイブ
-
-🤖 Generated with [Claude Code](https://claude.ai/code)
-
-Co-Authored-By: Claude <noreply@anthropic.com>"
+            git commit -m "Weekly data update ${COMMIT_DATE}"
             git push
           else
             echo "📭 変更がないためコミットをスキップしました"
