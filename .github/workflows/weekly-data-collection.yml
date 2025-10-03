@@ -84,8 +84,8 @@ jobs:
       - name: Commit and push changes
         if: steps.check-images.outputs.new-images == 'true'
         run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
+          git config --local user.email "iori730002204294@gmail.com"
+          git config --local user.name "iori73"
           # Add files that exist
           [ -f "public/fit_place24_data.csv" ] && git add public/fit_place24_data.csv
           [ -d "screenshots/" ] && git add screenshots/
