@@ -80,19 +80,29 @@ jobs:
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          git add public/fit_place24_data.csv screenshots/ scripts/extracted-data.json scripts/weekly-report.md
-          git commit -m "🤖 週次データ更新: $(date '+%Y-%m-%d %H:%M')
+          # Add files that exist
+          [ -f "public/fit_place24_data.csv" ] && git add public/fit_place24_data.csv
+          [ -d "screenshots/" ] && git add screenshots/
+          [ -f "scripts/extracted-data.json" ] && git add scripts/extracted-data.json
+          [ -f "scripts/weekly-report.md" ] && git add scripts/weekly-report.md
+          
+          # Only commit if there are changes
+          if ! git diff --cached --exit-code > /dev/null; then
+            git commit -m "🤖 週次データ更新: $(date '+%Y-%m-%d %H:%M')
 
-          ✨ 更新内容:
-          - 📊 Python OCRによるデータ抽出
-          - 💾 CSVデータ自動更新
-          - 📈 週次レポート生成  
-          - 🗃️ 処理済み画像アーカイブ
+✨ 更新内容:
+- 📊 Python OCRによるデータ抽出
+- 💾 CSVデータ自動更新
+- 📈 週次レポート生成  
+- 🗃️ 処理済み画像アーカイブ
 
-          🤖 Generated with [Claude Code](https://claude.ai/code)
+🤖 Generated with [Claude Code](https://claude.ai/code)
 
-          Co-Authored-By: Claude <noreply@anthropic.com>" || exit 0
-          git push
+Co-Authored-By: Claude <noreply@anthropic.com>"
+            git push
+          else
+            echo "📭 変更がないためコミットをスキップしました"
+          fi
 
       - name: Handle errors and notifications
         if: failure()
