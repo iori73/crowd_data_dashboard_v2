@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Clean Portfolio Thumbnail - Gym Data Dashboard</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+          sans-serif;
+        background: #1a1a1a;
+        padding: 40px;
+        color: white;
+      }
+
+      .portfolio-container {
+        max-width: 1400px;
+        margin: 0 auto;
+        background: #2a2a2a;
+        border-radius: 20px;
+        padding: 40px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      }
+
+      h1 {
+        text-align: center;
+        margin-bottom: 40px;
+        color: #fff;
+        font-size: 2.5rem;
+      }
+
+      .timeline-thumbnail {
+        width: 100%;
+        height: 500px;
+        border-radius: 20px;
+        overflow: hidden;
+        position: relative;
+        cursor: pointer;
+        box-shadow: 0 15px 50px rgba(0, 0, 0, 0.4);
+        transition: transform 0.3s ease;
+      }
+
+      .timeline-thumbnail:hover {
+        /* ホバー効果を削除 */
+      }
+
+      /* 純粋な空の光表現 - 文字なし */
+      .sky-frame {
+        width: 100%;
+        height: 60%;
+        position: relative;
+        transition: background 1.2s cubic-bezier(0.25, 0.1, 0.25, 1);
+        /* 初期状態：正午の空 - モノトーン */
+        background: linear-gradient(
+          135deg,
+          #b0b0b0 0%,
+          #d0d0d0 50%,
+          #f0f0f0 100%
+        );
+      }
+
+      /* ダークモード遷移効果 - よりゆったり */
+      .sky-frame.dark-mode-transition {
+        transform: scale(1.002);
+        box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.15);
+        transition: all 0.8s cubic-bezier(0.25, 0.1, 0.25, 1);
+      }
+
+      .sky-frame.dark-mode-active {
+        transform: scale(1);
+        box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.3);
+        transition: all 0.8s cubic-bezier(0.25, 0.1, 0.25, 1);
+      }
+
+      /* 時間帯ごとの空の色 - モノトーン */
+      .sky-frame.midnight {
+        background: linear-gradient(
+          135deg,
+          #1a1a1a 0%,
+          #2d2d2d 50%,
+          #404040 100%
+        );
+      }
+
+      .sky-frame.dawn {
+        background: linear-gradient(
+          135deg,
+          #505050 0%,
+          #707070 50%,
+          #909090 100%
+        );
+      }
+
+      .sky-frame.morning {
+        background: linear-gradient(
+          135deg,
+          #808080 0%,
+          #a0a0a0 50%,
+          #c0c0c0 100%
+        );
+      }
+
+      .sky-frame.midday {
+        background: linear-gradient(
+          135deg,
+          #b0b0b0 0%,
+          #d0d0d0 50%,
+          #f0f0f0 100%
+        );
+      }
+
+      .sky-frame.afternoon {
+        background: linear-gradient(
+          135deg,
+          #a0a0a0 0%,
+          #c0c0c0 50%,
+          #e0e0e0 100%
+        );
+      }
+
+      .sky-frame.evening {
+        background: linear-gradient(
+          135deg,
+          #707070 0%,
+          #909090 50%,
+          #b0b0b0 100%
+        );
+      }
+
+      .sky-frame.dusk {
+        background: linear-gradient(
+          135deg,
+          #505050 0%,
+          #707070 50%,
+          #909090 100%
+        );
+      }
+
+      .sky-frame.night {
+        background: linear-gradient(
+          135deg,
+          #2d2d2d 0%,
+          #404040 50%,
+          #505050 100%
+        );
+      }
+
+      /* タイムライン */
+      .timeline-bar {
+        position: absolute;
+        bottom: 80px;
+        left: 5%;
+        right: 5%;
+        height: 4px;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 2px;
+      }
+
+      .timeline-progress {
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          #ffeb3b 0%,
+          #2196f3 50%,
+          #9c27b0 100%
+        );
+        border-radius: 2px;
+        width: 0%;
+        transition: width 0.3s ease;
+      }
+
+      .time-markers {
+        position: absolute;
+        bottom: 60px;
+        left: 5%;
+        right: 5%;
+        display: flex;
+        justify-content: space-between;
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 0.9rem;
+      }
+
+      /* ダッシュボードプレビュー */
+      .dashboard-preview {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: auto;
+        height: 60%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: visible;
+        z-index: 10;
+      }
+
+      .dashboard-screenshot {
+        width: 120px;
+        height: 100%;
+        border-radius: 8px;
+        overflow: hidden;
+        position: relative;
+        /* box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4); */
+      }
+
+      .dashboard-screenshot img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        opacity: 1;
+      }
+
+      /* フェードアニメーション削除済み */
+
+      /* スクリーンショットが利用できない場合のフォールバック */
+      .dashboard-screenshot.fallback {
+        background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        color: white;
+        font-size: 1.1rem;
+        border: 2px solid rgba(255, 255, 255, 0.1);
+        text-align: center;
+      }
+
+      .dashboard-screenshot.fallback .placeholder-icon {
+        font-size: 3rem;
+        margin-bottom: 10px;
+        opacity: 0.7;
+      }
+
+      .dashboard-screenshot.fallback .placeholder-text {
+        font-size: 1rem;
+        opacity: 0.8;
+        margin-bottom: 5px;
+      }
+
+      .dashboard-screenshot.fallback .placeholder-subtext {
+        font-size: 0.8rem;
+        opacity: 0.6;
+      }
+
+      /* ダークモード時のスクリーンショット効果 */
+      .dashboard-screenshot.dark-mode {
+        /* シャドウとフィルター効果を削除 */
+      }
+
+      .dashboard-screenshot.dark-mode.fallback {
+        background: linear-gradient(135deg, #1a1a1a 0%, #2d2d30 100%);
+        border-color: rgba(255, 255, 255, 0.2);
+      }
+
+      /* ホバー効果を削除 */
+
+      /* レスポンシブ */
+      @media (max-width: 768px) {
+        .timeline-thumbnail {
+          height: 400px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="portfolio-container">
+      <h1>🌌 Gym Data Dashboard - クリーンサムネイル</h1>
+
+      <div class="timeline-thumbnail" id="timelineThumbnail">
+        <!-- 純粋な空の光表現（文字なし） -->
+        <div class="sky-frame" id="skyFrame"></div>
+
+        <!-- タイムライン -->
+        <div class="timeline-bar">
+          <div class="timeline-progress" id="timelineProgress"></div>
+        </div>
+
+        <div class="time-markers">
+          <span>0:00</span>
+          <span>6:00</span>
+          <span>12:00</span>
+          <span>18:00</span>
+          <span>24:00</span>
+        </div>
+
+        <!-- ダッシュボードプレビュー -->
+        <div class="dashboard-preview">
+          <div class="dashboard-screenshot fallback" id="dashboardPreview">
+            <div class="placeholder-icon">📊</div>
+            <div class="placeholder-text">Gym Analytics Dashboard</div>
+            <div class="placeholder-subtext">リアルタイム混雑状況データ</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      class CleanTimelinePortfolioThumbnail {
+        constructor() {
+          this.thumbnail = document.getElementById('timelineThumbnail');
+          this.skyFrame = document.getElementById('skyFrame');
+          this.progress = document.getElementById('timelineProgress');
+          this.dashboardPreview = document.getElementById('dashboardPreview');
+
+          this.isDarkMode = false;
+          this.currentHour = 12; // 初期は正午12時
+          this.currentImageMode = 'light'; // 現在表示中の画像モード
+
+          // スクリーンショット管理
+          this.screenshots = {
+            light: 'assets/dashboard-light.png',
+            dark: 'assets/dashboard-dark.png',
+          };
+          this.screenshotLoaded = { light: false, dark: false };
+          this.loadedImages = { light: null, dark: null };
+
+          this.init();
+        }
+
+        init() {
+          this.setupMouseInteraction();
+          this.setupInitialState();
+          this.loadDashboardScreenshots();
+          console.log('🌌 Clean Timeline Portfolio Thumbnail initialized!');
+        }
+
+        /**
+         * ダッシュボードスクリーンショットをロード
+         */
+        async loadDashboardScreenshots() {
+          console.log('📸 Loading dashboard screenshots...');
+
+          // ライトモードとダークモードの両方をロード
+          try {
+            const lightImg = await this.loadImage(this.screenshots.light);
+            this.loadedImages.light = lightImg;
+            this.screenshotLoaded.light = true;
+            console.log('✅ Light mode screenshot loaded');
+          } catch (error) {
+            console.log('⚠️ Light mode screenshot not available');
+          }
+
+          try {
+            const darkImg = await this.loadImage(this.screenshots.dark);
+            this.loadedImages.dark = darkImg;
+            this.screenshotLoaded.dark = true;
+            console.log('✅ Dark mode screenshot loaded');
+          } catch (error) {
+            console.log('⚠️ Dark mode screenshot not available');
+          }
+
+          // 初期表示設定（ライトモード）
+          if (this.screenshotLoaded.light) {
+            this.setupScreenshotDisplay(this.loadedImages.light, false);
+          } else {
+            this.setupFallbackDisplay();
+          }
+        }
+
+        /**
+         * 画像を非同期でロード
+         */
+        loadImage(src) {
+          return new Promise((resolve, reject) => {
+            const img = new Image();
+            img.onload = () => resolve(img);
+            img.onerror = () => reject(new Error(`Failed to load ${src}`));
+            img.src = src;
+          });
+        }
+
+        /**
+         * スクリーンショット表示を設定（滑らかな切り替えとともに）
+         */
+        setupScreenshotDisplay(img, isDark = false) {
+          // アニメーションなしで即座に画像を入れ替え
+          this.replaceImage(img, isDark);
+        }
+
+        /**
+         * 画像を入れ替え
+         */
+        replaceImage(img, isDark) {
+          this.dashboardPreview.innerHTML = '';
+          this.dashboardPreview.classList.remove('fallback');
+
+          const imgElement = img.cloneNode();
+          imgElement.alt = 'Gym Analytics Dashboard Screenshot';
+          this.dashboardPreview.appendChild(imgElement);
+
+          if (isDark) {
+            this.dashboardPreview.classList.add('dark-mode');
+          } else {
+            this.dashboardPreview.classList.remove('dark-mode');
+          }
+        }
+
+        /**
+         * フォールバック表示を設定
+         */
+        setupFallbackDisplay() {
+          this.dashboardPreview.classList.add('fallback');
+          this.updateFallbackContent(false);
+        }
+
+        /**
+         * フォールバック内容を更新
+         */
+        updateFallbackContent(isDarkMode) {
+          if (!this.dashboardPreview.classList.contains('fallback')) return;
+
+          const icon = this.dashboardPreview.querySelector('.placeholder-icon');
+          const text = this.dashboardPreview.querySelector('.placeholder-text');
+          const subtext = this.dashboardPreview.querySelector(
+            '.placeholder-subtext',
+          );
+
+          if (isDarkMode) {
+            icon.textContent = '🌙';
+            text.textContent = 'Gym Analytics Dashboard (Dark)';
+            subtext.textContent = '夜間モード - 混雑状況データ';
+            this.dashboardPreview.classList.add('dark-mode');
+          } else {
+            icon.textContent = '📊';
+            text.textContent = 'Gym Analytics Dashboard (Light)';
+            subtext.textContent = 'リアルタイム混雑状況データ';
+            this.dashboardPreview.classList.remove('dark-mode');
+          }
+        }
+
+        setupInitialState() {
+          // 初期状態：正午12時
+          this.updateBackgroundGradient(12);
+        }
+
+        setupMouseInteraction() {
+          let throttleTimeout = null;
+          
+          this.thumbnail.addEventListener('mousemove', (e) => {
+            // デバウンス処理で滑らかに
+            if (throttleTimeout) return;
+            
+            throttleTimeout = setTimeout(() => {
+              const rect = this.thumbnail.getBoundingClientRect();
+              const x = e.clientX - rect.left;
+              const progress = Math.max(0, Math.min(1, x / rect.width));
+
+              // 0時から24時までの時間範囲（左端=0時、右端=24時）
+              const hour = progress * 24;
+              this.currentHour = hour;
+
+              this.updateBackgroundGradient(hour);
+              this.updateDarkModeTransition(hour);
+              this.updateDashboardMode(hour);
+
+              // タイムラインプログレス更新
+              this.progress.style.width = `${progress * 100}%`;
+              
+              throttleTimeout = null;
+            }, 50); // 50ms間隔でスロットル
+          });
+
+          this.thumbnail.addEventListener('mouseleave', () => {
+            // デフォルトの正午の状態に戻る
+            this.resetToDefault();
+          });
+        }
+
+        updateBackgroundGradient(hour) {
+          const timeOfDay = this.getTimeOfDay(hour);
+
+          // 既存の時間帯クラスをすべて削除
+          const timeClasses = [
+            'dawn',
+            'morning',
+            'midday',
+            'afternoon',
+            'evening',
+            'dusk',
+            'night',
+            'midnight',
+          ];
+          timeClasses.forEach((cls) => this.skyFrame.classList.remove(cls));
+
+          // 新しい時間帯クラスを追加
+          this.skyFrame.classList.add(timeOfDay);
+        }
+
+        getTimeOfDay(hour) {
+          if (hour >= 5 && hour < 7) return 'dawn'; // 夜明け
+          if (hour >= 7 && hour < 10) return 'morning'; // 朝
+          if (hour >= 10 && hour < 14) return 'midday'; // 正午
+          if (hour >= 14 && hour < 17) return 'afternoon'; // 午後
+          if (hour >= 17 && hour < 19) return 'evening'; // 夕方
+          if (hour >= 19 && hour < 21) return 'dusk'; // 黄昏
+          if (hour >= 21 || hour < 2) return 'night'; // 夜
+          return 'midnight'; // 深夜 (2-5時)
+        }
+
+        updateDarkModeTransition(hour) {
+          const isNightTime = hour >= 18 || hour < 6;
+
+          if (isNightTime && !this.isDarkMode) {
+            this.transitionToNightMode();
+          } else if (!isNightTime && this.isDarkMode) {
+            this.transitionToDayMode();
+          }
+        }
+
+        transitionToNightMode() {
+          if (this.isDarkMode) return; // 既にダークモードの場合は何もしない
+
+          this.isDarkMode = true;
+          console.log('🌙 Transitioning to Dark Mode...');
+
+          // Phase 1: 遷移開始効果 (0-100ms)
+          this.skyFrame.classList.add('dark-mode-transition');
+
+          // Phase 2: メイン遷移 (100-500ms) - 0.5秒で完了
+          setTimeout(() => {
+            this.skyFrame.classList.add('dark-mode-active');
+
+            // 遷移効果クラス削除
+            setTimeout(() => {
+              this.skyFrame.classList.remove('dark-mode-transition');
+            }, 400);
+          }, 100);
+        }
+
+        transitionToDayMode() {
+          if (!this.isDarkMode) return; // 既にライトモードの場合は何もしない
+
+          this.isDarkMode = false;
+          console.log('☀️ Transitioning to Light Mode...');
+
+          // Phase 1: 遷移開始効果 (0-100ms)
+          this.skyFrame.classList.add('dark-mode-transition');
+
+          // Phase 2: メイン遷移 (100-500ms) - 0.5秒で完了
+          setTimeout(() => {
+            this.skyFrame.classList.remove('dark-mode-active');
+
+            // 遷移効果クラス削除
+            setTimeout(() => {
+              this.skyFrame.classList.remove('dark-mode-transition');
+            }, 400);
+          }, 100);
+        }
+
+        updateDashboardMode(hour) {
+          const isNightTime = hour >= 18 || hour <= 6;
+          const targetMode = isNightTime ? 'dark' : 'light';
+
+          // 既に同じモードの画像が表示されている場合は何もしない
+          if (this.currentImageMode === targetMode) {
+            return;
+          }
+
+          this.currentImageMode = targetMode;
+
+          if (isNightTime && this.screenshotLoaded.dark) {
+            // ダークモード画像を表示
+            this.setupScreenshotDisplay(this.loadedImages.dark, true);
+          } else if (!isNightTime && this.screenshotLoaded.light) {
+            // ライトモード画像を表示
+            this.setupScreenshotDisplay(this.loadedImages.light, false);
+          } else {
+            // 該当画像がない場合はフォールバック表示
+            this.updateFallbackContent(isNightTime);
+          }
+        }
+
+        resetToDefault() {
+          // デフォルトの正午の状態に戻る
+          this.currentHour = 12;
+          this.currentImageMode = 'light'; // 画像モードもリセット
+          this.updateBackgroundGradient(12);
+          this.updateDashboardMode(12);
+          this.progress.style.width = '0%';
+
+          // ダークモード状態もリセット
+          if (this.isDarkMode) {
+            this.isDarkMode = false;
+            this.skyFrame.classList.remove(
+              'dark-mode-active',
+              'dark-mode-transition',
+            );
+          }
+        }
+      }
+
+      // 初期化
+      document.addEventListener('DOMContentLoaded', () => {
+        new CleanTimelinePortfolioThumbnail();
+      });
+    </script>
+  </body>
+</html>

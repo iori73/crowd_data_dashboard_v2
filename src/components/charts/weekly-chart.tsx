@@ -52,8 +52,8 @@ export function WeeklyChart({ data, type = 'line', language = 'ja' }: WeeklyChar
       {
         label: data.weekday,
         data: dataValues,
-        borderColor: '#84cc16',
-        backgroundColor: type === 'bar' ? 'rgba(132, 204, 22, 0.5)' : 'rgba(132, 204, 22, 0.1)',
+        borderColor: '#bef264',
+        backgroundColor: type === 'bar' ? 'rgba(190, 242, 100, 0.5)' : 'rgba(190, 242, 100, 0.1)',
         tension: 0.3,
       },
     ],
@@ -119,22 +119,7 @@ export function WeeklyChart({ data, type = 'line', language = 'ja' }: WeeklyChar
             borderWidth: 2,
             borderDash: [6, 6],
             label: {
-              display: true,
-              content: averageLabel,
-              position: 'end' as const,
-              backgroundColor: 'rgba(107, 114, 128, 0.1)',
-              color: 'rgb(107, 114, 128)',
-              font: {
-                size: 16,
-                weight: 'bold' as const,
-              },
-              padding: {
-                top: 4,
-                bottom: 4,
-                left: 8,
-                right: 8,
-              },
-              borderRadius: 4,
+              display: false,
             },
           },
         },
@@ -175,9 +160,31 @@ export function WeeklyChart({ data, type = 'line', language = 'ja' }: WeeklyChar
 
   const ChartComponent = type === 'bar' ? Bar : Line
 
+  // Calculate Y position to match the dashed line
+  const maxValue = Math.max(...dataValues, averageValue)
+  const minValue = 0
+  const range = maxValue - minValue
+  
+  // Chart.js layout calculations
+  const containerHeight = 300
+  const topPadding = 50 // Title + padding
+  const bottomPadding = 60 // X-axis labels + padding
+  const chartAreaHeight = containerHeight - topPadding - bottomPadding
+  
+  // Calculate position: higher values appear lower on screen (inverted Y)
+  const valueRatio = range > 0 ? (maxValue - averageValue) / range : 0
+  const topPosition = topPadding + (valueRatio * chartAreaHeight)
+
   return (
-    <div className="w-full h-[300px] p-4 bg-white rounded-lg shadow-sm border">
-      <ChartComponent data={chartData} options={options} />
+    <div className="w-full h-[300px] bg-white rounded-lg shadow-sm border relative">
+      <div className="w-full h-full p-4 pr-10">
+        <ChartComponent data={chartData} options={options} />
+      </div>
+      <div className="absolute right-6" style={{ top: `${topPosition}px`, transform: 'translateY(-50%)' }}>
+        <span className="font-bold text-gray-400" style={{ fontSize: '21px' }}>
+          {averageValue}
+        </span>
+      </div>
     </div>
   )
 }

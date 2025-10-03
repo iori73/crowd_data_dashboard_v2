@@ -1,4 +1,4 @@
-# Production OCR dependencies for FIT PLACE24 data collection
+# Production OCR dependencies for gym data collection
 easyocr>=1.7.0
 pytesseract>=0.3.10
 opencv-python>=4.8.0

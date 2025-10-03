@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Production-ready Python OCR processor for FIT PLACE24 screenshots
+Production-ready Python OCR processor for My Gym screenshots
 Integrates EasyOCR and Tesseract for reliable text extraction
 """
 
@@ -32,7 +32,7 @@ class ProductionOCRProcessor:
     def __init__(self):
         self.inbox_dir = 'screenshots/inbox'
         self.output_file = 'scripts/extracted-data.json'
-        self.icloud_path = os.path.expanduser('~/Library/Mobile Documents/com~apple~CloudDocs/Shortcuts/FIT_PLACE24/')
+        self.icloud_path = os.path.expanduser('~/Library/Mobile Documents/iCloud~is~workflow~my~workflows/Documents/My_Gym')
         self.extracted_data = []
         self.supported_formats = ['.png', '.jpg', '.jpeg', '.bmp', '.tiff']
         
@@ -71,7 +71,7 @@ class ProductionOCRProcessor:
                 print(f"⚠️ iCloudパスが見つかりません: {self.icloud_path}")
                 return
             
-            # Find FIT PLACE24 images
+            # Find My Gym images
             icloud_files = []
             for file in os.listdir(self.icloud_path):
                 if any(file.lower().endswith(ext) for ext in self.supported_formats):
@@ -79,10 +79,10 @@ class ProductionOCRProcessor:
                         icloud_files.append(file)
             
             if not icloud_files:
-                print("📭 iCloudに新しいFIT PLACE24画像がありません")
+                print("📭 iCloudに新しいMy Gym画像がありません")
                 return
                 
-            print(f"☁️ iCloudで{len(icloud_files)}枚のFIT PLACE24画像を発見")
+            print(f"☁️ iCloudで{len(icloud_files)}枚のMy Gym画像を発見")
             
             # Ensure inbox directory exists
             os.makedirs(self.inbox_dir, exist_ok=True)

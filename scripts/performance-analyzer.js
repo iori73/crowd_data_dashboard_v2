@@ -34,14 +34,13 @@ class PerformanceAnalyzer {
         dateRange: this.getDateRange(data),
         ...this.analyzeCrowdingPatterns(data),
         ...this.analyzeTimeEfficiency(data),
-        ...this.generateRecommendations(data)
+        ...this.generateRecommendations(data),
       };
 
       this.saveAnalysis(analysis);
       this.printAnalysisSummary(analysis);
 
       console.log('✅ パフォーマンス分析完了!');
-      
     } catch (error) {
       console.error('❌ 分析エラー:', error.message);
       throw error;
@@ -61,7 +60,7 @@ class PerformanceAnalyzer {
       return parse(content, {
         columns: true,
         skip_empty_lines: true,
-        trim: true
+        trim: true,
       });
     } catch (error) {
       console.error('CSV読み込みエラー:', error.message);
@@ -73,11 +72,14 @@ class PerformanceAnalyzer {
    * 日付範囲を取得
    */
   getDateRange(data) {
-    const dates = data.map(r => r.date).filter(d => d).sort();
+    const dates = data
+      .map((r) => r.date)
+      .filter((d) => d)
+      .sort();
     return {
       start: dates[0],
       end: dates[dates.length - 1],
-      totalDays: dates.length > 0 ? new Set(dates).size : 0
+      totalDays: dates.length > 0 ? new Set(dates).size : 0,
     };
   }
 
@@ -94,7 +96,7 @@ class PerformanceAnalyzer {
       hourlyStats[hour] = [];
     }
 
-    data.forEach(record => {
+    data.forEach((record) => {
       const hour = parseInt(record.hour);
       const count = parseInt(record.count);
       const weekday = record.weekday;
@@ -122,8 +124,8 @@ class PerformanceAnalyzer {
         quietHours: this.findQuietHours(hourlyStats),
         weekdayTrends: this.analyzeWeekdayTrends(weekdayStats),
         monthlyTrends: this.analyzeMonthlyTrends(monthlyStats),
-        crowdingDistribution: this.analyzeCrowdingDistribution(data)
-      }
+        crowdingDistribution: this.analyzeCrowdingDistribution(data),
+      },
     };
   }
 
@@ -132,7 +134,7 @@ class PerformanceAnalyzer {
    */
   findPeakHours(hourlyStats) {
     const peaks = [];
-    
+
     for (const hour in hourlyStats) {
       const counts = hourlyStats[hour];
       if (counts.length > 0) {
@@ -142,13 +144,13 @@ class PerformanceAnalyzer {
           hour: parseInt(hour),
           averageCount: Math.round(avg),
           maxCount: max,
-          frequency: counts.length
+          frequency: counts.length,
         });
       }
     }
 
     return peaks
-      .filter(p => p.averageCount >= 25) // 平均25人以上を混雑とみなす
+      .filter((p) => p.averageCount >= 25) // 平均25人以上を混雑とみなす
       .sort((a, b) => b.averageCount - a.averageCount)
       .slice(0, 5);
   }
@@ -158,7 +160,7 @@ class PerformanceAnalyzer {
    */
   findQuietHours(hourlyStats) {
     const quiet = [];
-    
+
     for (const hour in hourlyStats) {
       const counts = hourlyStats[hour];
       if (counts.length > 0) {
@@ -168,13 +170,13 @@ class PerformanceAnalyzer {
           hour: parseInt(hour),
           averageCount: Math.round(avg),
           minCount: min,
-          frequency: counts.length
+          frequency: counts.length,
         });
       }
     }
 
     return quiet
-      .filter(q => q.averageCount <= 15) // 平均15人以下を空いているとみなす
+      .filter((q) => q.averageCount <= 15) // 平均15人以下を空いているとみなす
       .sort((a, b) => a.averageCount - b.averageCount)
       .slice(0, 5);
   }
@@ -184,10 +186,10 @@ class PerformanceAnalyzer {
    */
   analyzeWeekdayTrends(weekdayStats) {
     const trends = [];
-    
+
     const weekdayOrder = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
-    
-    weekdayOrder.forEach(weekday => {
+
+    weekdayOrder.forEach((weekday) => {
       if (weekdayStats[weekday] && weekdayStats[weekday].length > 0) {
         const counts = weekdayStats[weekday];
         const avg = counts.reduce((a, b) => a + b, 0) / counts.length;
@@ -195,7 +197,7 @@ class PerformanceAnalyzer {
           weekday,
           averageCount: Math.round(avg),
           visits: counts.length,
-          trend: avg > 20 ? 'busy' : avg > 15 ? 'moderate' : 'quiet'
+          trend: avg > 20 ? 'busy' : avg > 15 ? 'moderate' : 'quiet',
         });
       }
     });
@@ -209,10 +211,20 @@ class PerformanceAnalyzer {
   analyzeMonthlyTrends(monthlyStats) {
     const trends = [];
     const monthNames = [
-      'January', 'February', 'March', 'April', 'May', 'June',
-      'July', 'August', 'September', 'October', 'November', 'December'
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December',
     ];
-    
+
     for (let month = 0; month < 12; month++) {
       if (monthlyStats[month] && monthlyStats[month].length > 0) {
         const counts = monthlyStats[month];
@@ -220,7 +232,7 @@ class PerformanceAnalyzer {
         trends.push({
           month: monthNames[month],
           averageCount: Math.round(avg),
-          visits: counts.length
+          visits: counts.length,
         });
       }
     }
@@ -233,14 +245,14 @@ class PerformanceAnalyzer {
    */
   analyzeCrowdingDistribution(data) {
     const distribution = {
-      veryQuiet: 0,     // 0-10人
-      quiet: 0,         // 11-20人  
-      moderate: 0,      // 21-30人
-      busy: 0,          // 31-40人
-      veryBusy: 0       // 41人以上
+      veryQuiet: 0, // 0-10人
+      quiet: 0, // 11-20人
+      moderate: 0, // 21-30人
+      busy: 0, // 31-40人
+      veryBusy: 0, // 41人以上
     };
 
-    data.forEach(record => {
+    data.forEach((record) => {
       const count = parseInt(record.count);
       if (!isNaN(count)) {
         if (count <= 10) distribution.veryQuiet++;
@@ -259,8 +271,8 @@ class PerformanceAnalyzer {
         quiet: Math.round((distribution.quiet / total) * 100),
         moderate: Math.round((distribution.moderate / total) * 100),
         busy: Math.round((distribution.busy / total) * 100),
-        veryBusy: Math.round((distribution.veryBusy / total) * 100)
-      }
+        veryBusy: Math.round((distribution.veryBusy / total) * 100),
+      },
     };
   }
 
@@ -271,7 +283,7 @@ class PerformanceAnalyzer {
     const efficiency = {
       bestWorkoutTimes: this.findBestWorkoutTimes(data),
       worstWorkoutTimes: this.findWorstWorkoutTimes(data),
-      weeklyEfficiency: this.analyzeWeeklyEfficiency(data)
+      weeklyEfficiency: this.analyzeWeeklyEfficiency(data),
     };
 
     return { timeEfficiency: efficiency };
@@ -282,11 +294,11 @@ class PerformanceAnalyzer {
    */
   findBestWorkoutTimes(data) {
     const hourlyData = {};
-    
-    data.forEach(record => {
+
+    data.forEach((record) => {
       const hour = parseInt(record.hour);
       const count = parseInt(record.count);
-      
+
       if (!hourlyData[hour]) {
         hourlyData[hour] = [];
       }
@@ -294,26 +306,25 @@ class PerformanceAnalyzer {
     });
 
     const bestTimes = [];
-    
+
     for (const hour in hourlyData) {
       const counts = hourlyData[hour];
       const avg = counts.reduce((a, b) => a + b, 0) / counts.length;
       const consistency = this.calculateConsistency(counts);
-      
-      if (avg <= 15 && consistency > 0.7) { // 平均15人以下で一貫性70%以上
+
+      if (avg <= 15 && consistency > 0.7) {
+        // 平均15人以下で一貫性70%以上
         bestTimes.push({
           hour: parseInt(hour),
           averageCount: Math.round(avg),
           consistency: Math.round(consistency * 100),
           visits: counts.length,
-          efficiencyScore: Math.round((1 - avg / 50) * consistency * 100)
+          efficiencyScore: Math.round((1 - avg / 50) * consistency * 100),
         });
       }
     }
 
-    return bestTimes
-      .sort((a, b) => b.efficiencyScore - a.efficiencyScore)
-      .slice(0, 3);
+    return bestTimes.sort((a, b) => b.efficiencyScore - a.efficiencyScore).slice(0, 3);
   }
 
   /**
@@ -321,11 +332,11 @@ class PerformanceAnalyzer {
    */
   findWorstWorkoutTimes(data) {
     const hourlyData = {};
-    
-    data.forEach(record => {
+
+    data.forEach((record) => {
       const hour = parseInt(record.hour);
       const count = parseInt(record.count);
-      
+
       if (!hourlyData[hour]) {
         hourlyData[hour] = [];
       }
@@ -333,24 +344,23 @@ class PerformanceAnalyzer {
     });
 
     const worstTimes = [];
-    
+
     for (const hour in hourlyData) {
       const counts = hourlyData[hour];
       const avg = counts.reduce((a, b) => a + b, 0) / counts.length;
-      
-      if (avg >= 30) { // 平均30人以上を混雑とみなす
+
+      if (avg >= 30) {
+        // 平均30人以上を混雑とみなす
         worstTimes.push({
           hour: parseInt(hour),
           averageCount: Math.round(avg),
           maxCount: Math.max(...counts),
-          visits: counts.length
+          visits: counts.length,
         });
       }
     }
 
-    return worstTimes
-      .sort((a, b) => b.averageCount - a.averageCount)
-      .slice(0, 3);
+    return worstTimes.sort((a, b) => b.averageCount - a.averageCount).slice(0, 3);
   }
 
   /**
@@ -358,13 +368,13 @@ class PerformanceAnalyzer {
    */
   calculateConsistency(values) {
     if (values.length === 0) return 0;
-    
+
     const mean = values.reduce((a, b) => a + b, 0) / values.length;
     const variance = values.reduce((a, b) => a + Math.pow(b - mean, 2), 0) / values.length;
     const stdDev = Math.sqrt(variance);
-    
+
     // 一貫性 = 1 - (標準偏差 / 平均)、最大1に制限
-    return Math.min(1, Math.max(0, 1 - (stdDev / mean)));
+    return Math.min(1, Math.max(0, 1 - stdDev / mean));
   }
 
   /**
@@ -372,13 +382,13 @@ class PerformanceAnalyzer {
    */
   analyzeWeeklyEfficiency(data) {
     const weeklyStats = {};
-    
-    data.forEach(record => {
+
+    data.forEach((record) => {
       const date = new Date(record.date);
       const weekStart = new Date(date);
       weekStart.setDate(date.getDate() - date.getDay()); // 週の始まり（日曜日）
       const weekKey = weekStart.toISOString().split('T')[0];
-      
+
       if (!weeklyStats[weekKey]) {
         weeklyStats[weekKey] = [];
       }
@@ -386,25 +396,23 @@ class PerformanceAnalyzer {
     });
 
     const efficiency = [];
-    
+
     for (const week in weeklyStats) {
       const counts = weeklyStats[week];
       const avg = counts.reduce((a, b) => a + b, 0) / counts.length;
-      const quietSessions = counts.filter(c => c <= 15).length;
+      const quietSessions = counts.filter((c) => c <= 15).length;
       const efficiencyRate = quietSessions / counts.length;
-      
+
       efficiency.push({
         week,
         averageCount: Math.round(avg),
         totalSessions: counts.length,
         quietSessions,
-        efficiencyRate: Math.round(efficiencyRate * 100)
+        efficiencyRate: Math.round(efficiencyRate * 100),
       });
     }
 
-    return efficiency
-      .sort((a, b) => new Date(b.week).getTime() - new Date(a.week).getTime())
-      .slice(0, 4); // 最近4週間
+    return efficiency.sort((a, b) => new Date(b.week).getTime() - new Date(a.week).getTime()).slice(0, 4); // 最近4週間
   }
 
   /**
@@ -413,11 +421,11 @@ class PerformanceAnalyzer {
   generateRecommendations(data) {
     const recommendations = [];
     const hourlyAvg = {};
-    
-    data.forEach(record => {
+
+    data.forEach((record) => {
       const hour = parseInt(record.hour);
       const count = parseInt(record.count);
-      
+
       if (!hourlyAvg[hour]) {
         hourlyAvg[hour] = [];
       }
@@ -428,14 +436,14 @@ class PerformanceAnalyzer {
     for (const hour in hourlyAvg) {
       const counts = hourlyAvg[hour];
       const avg = counts.reduce((a, b) => a + b, 0) / counts.length;
-      
+
       if (avg <= 10) {
         recommendations.push({
           type: 'optimal_time',
           hour: parseInt(hour),
           message: `${hour}:00は平均${Math.round(avg)}人で最適なワークアウト時間です`,
           priority: 'high',
-          averageCount: Math.round(avg)
+          averageCount: Math.round(avg),
         });
       } else if (avg >= 35) {
         recommendations.push({
@@ -443,7 +451,7 @@ class PerformanceAnalyzer {
           hour: parseInt(hour),
           message: `${hour}:00は平均${Math.round(avg)}人で混雑するため避けることをお勧めします`,
           priority: 'high',
-          averageCount: Math.round(avg)
+          averageCount: Math.round(avg),
         });
       }
     }
@@ -455,7 +463,7 @@ class PerformanceAnalyzer {
           if (a.priority !== 'high' && b.priority === 'high') return 1;
           return a.hour - b.hour;
         })
-        .slice(0, 10)
+        .slice(0, 10),
     };
   }
 
@@ -474,17 +482,17 @@ class PerformanceAnalyzer {
     console.log('\n🔍 === パフォーマンス分析サマリー ===');
     console.log(`📊 分析期間: ${analysis.dateRange.start} ～ ${analysis.dateRange.end}`);
     console.log(`📈 総データ数: ${analysis.totalRecords}件`);
-    
+
     if (analysis.crowdingPatterns.quietHours.length > 0) {
       const best = analysis.crowdingPatterns.quietHours[0];
       console.log(`🎯 最適時間: ${best.hour}:00（平均${best.averageCount}人）`);
     }
-    
+
     if (analysis.crowdingPatterns.peakHours.length > 0) {
       const peak = analysis.crowdingPatterns.peakHours[0];
       console.log(`⚠️ 混雑ピーク: ${peak.hour}:00（平均${peak.averageCount}人）`);
     }
-    
+
     console.log(`💡 推奨事項: ${analysis.recommendations.length}件`);
     console.log('='.repeat(40));
   }

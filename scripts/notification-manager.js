@@ -73,13 +73,13 @@ class NotificationManager {
 
     return {
       slack: {
-        text: `${emoji} FIT PLACE24 データ処理完了`,
+        text: `${emoji} ジムデータ処理完了`,
         blocks: [
           {
             type: 'header',
             text: {
               type: 'plain_text',
-              text: `${emoji} FIT PLACE24 週次データ処理完了`
+              text: `${emoji} ジム週次データ処理完了`
             }
           },
           {
@@ -126,7 +126,7 @@ class NotificationManager {
       discord: {
         embeds: [
           {
-            title: `${emoji} FIT PLACE24 データ処理完了`,
+            title: `${emoji} ジムデータ処理完了`,
             color: stats.newCount > 0 ? 0x00ff00 : 0x0099ff, // 緑または青
             fields: [
               {
@@ -173,13 +173,13 @@ class NotificationManager {
 
     return {
       slack: {
-        text: '🚨 FIT PLACE24 処理エラー',
+        text: '🚨 ジムデータ処理エラー',
         blocks: [
           {
             type: 'header',
             text: {
               type: 'plain_text',
-              text: '🚨 FIT PLACE24 処理エラー'
+              text: '🚨 ジムデータ処理エラー'
             }
           },
           {
@@ -214,7 +214,7 @@ class NotificationManager {
       discord: {
         embeds: [
           {
-            title: '🚨 FIT PLACE24 処理エラー',
+            title: '🚨 ジムデータ処理エラー',
             color: 0xff0000, // 赤
             fields: [
               {
@@ -258,13 +258,13 @@ class NotificationManager {
 
     return {
       slack: {
-        text: '🚀 FIT PLACE24 処理開始',
+        text: '🚀 ジムデータ処理開始',
         blocks: [
           {
             type: 'section',
             text: {
               type: 'mrkdwn',
-              text: `🚀 *FIT PLACE24 データ処理を開始しました*\n📸 処理対象: ${fileCount}件の画像\n⏰ 開始時刻: ${timestamp}`
+              text: `🚀 *ジムデータ処理を開始しました*\n📸 処理対象: ${fileCount}件の画像\n⏰ 開始時刻: ${timestamp}`
             }
           }
         ]
@@ -272,7 +272,7 @@ class NotificationManager {
       discord: {
         embeds: [
           {
-            title: '🚀 FIT PLACE24 データ処理開始',
+            title: '🚀 ジムデータ処理開始',
             color: 0xffaa00, // オレンジ
             description: `📸 処理対象: ${fileCount}件の画像`,
             footer: {

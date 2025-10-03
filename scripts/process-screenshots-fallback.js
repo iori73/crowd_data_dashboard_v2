@@ -10,7 +10,7 @@ import { join } from 'path';
 class GymDataOCRProcessor {
   constructor() {
     // v1システム互換のiCloudパス設定
-    this.iCloudPath = `${process.env.HOME}/Library/Mobile Documents/com~apple~CloudDocs/Shortcuts/FIT_PLACE24/`;
+    this.iCloudPath = `${process.env.HOME}/Library/Mobile Documents/iCloud~is~workflow~my~workflows/Documents/My_Gym`;
     this.inboxDir = 'screenshots/inbox';
     this.outputFile = 'scripts/extracted-data.json';
     this.extractedData = [];
@@ -442,11 +442,11 @@ class GymDataOCRProcessor {
         .sort();
       
       if (iCloudFiles.length === 0) {
-        console.log('📭 iCloudに新しいFIT PLACE24画像がありません');
+        console.log('📭 iCloudに新しいジム画像がありません');
         return;
       }
       
-      console.log(`☁️ iCloudで${iCloudFiles.length}枚のFIT PLACE24画像を発見`);
+      console.log(`☁️ iCloudで${iCloudFiles.length}枚のジム画像を発見`);
       
       // inboxディレクトリの存在確認・作成
       if (!existsSync(this.inboxDir)) {

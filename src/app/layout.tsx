@@ -25,7 +25,7 @@ export default function RootLayout({
       <body className="antialiased montserrat-font" suppressHydrationWarning>
         <ThemeProvider
           attribute="class"
-          defaultTheme="dark"
+          defaultTheme="light"
           enableSystem
           disableTransitionOnChange
         >
