@@ -88,7 +88,8 @@ jobs:
           
           # Only commit if there are changes
           if ! git diff --cached --exit-code > /dev/null; then
-            git commit -m "🤖 週次データ更新: $(date '+%Y-%m-%d %H:%M')
+            git commit -m "$(cat <<'EOF'
+🤖 週次データ更新: $(date '+%Y-%m-%d %H:%M')
 
 ✨ 更新内容:
 - 📊 Python OCRによるデータ抽出
@@ -98,7 +99,9 @@ jobs:
 
 🤖 Generated with [Claude Code](https://claude.ai/code)
 
-Co-Authored-By: Claude <noreply@anthropic.com>"
+Co-Authored-By: Claude <noreply@anthropic.com>
+EOF
+)"
             git push
           else
             echo "📭 変更がないためコミットをスキップしました"
