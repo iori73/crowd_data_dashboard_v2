@@ -43,5 +43,8 @@ next-env.d.ts
 # automation system temp files
 scripts/extracted-data.json
 scripts/weekly-report.md
-screenshots/inbox/*
+# Allow screenshot files for processing
+!screenshots/inbox/*.png
+!screenshots/inbox/*.jpg
+!screenshots/inbox/*.jpeg
 !screenshots/inbox/.gitkeep
