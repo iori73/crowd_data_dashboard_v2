@@ -1,0 +1,8 @@
+[2025-10-04 12:30:21] 🔄 Starting iCloud sync process...
+[2025-10-04 12:30:21] 📊 Files in inbox before sync:       35
+[2025-10-04 12:30:21] 📋 Copying new file: 2025:10:03, 21:57.png
+[2025-10-04 12:30:21] 📊 Files in inbox after sync:       36
+[2025-10-04 12:30:21] ✅ New files copied: 1
+[2025-10-04 12:30:21] 🔄 Committing new screenshots to git...
+[2025-10-04 12:30:21] 📭 No changes to commit
+[2025-10-04 12:30:21] ✅ iCloud sync process completed successfully

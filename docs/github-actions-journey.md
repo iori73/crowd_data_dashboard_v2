@@ -298,12 +298,36 @@ git remote show origin | grep "HEAD branch"
 - **Silent failure in OCR processing**: No clear error messages from Python script
 - **Data flow broken**: CSV update depends on missing extraction file
 
-### 📋 Next Steps
-1. **Add debug logging to Python OCR script** to identify where extraction fails
-2. **Test OCR script locally** with same screenshot data
-3. **Add error handling** to Python script for better failure reporting
-4. **Verify image processing logic** - ensure screenshots are being properly read
-5. **Check file permissions** in GitHub Actions environment
+### 🎯 SOLUTION IMPLEMENTED: Hybrid launchd + GitHub Actions
+
+**Implementation Date**: October 4, 2025
+
+#### Architecture Overview
+```
+Mac (launchd) → iCloud Sync → Git Push → GitHub Actions → Processing
+```
+
+#### Components:
+1. **launchd Job** (`com.mygym.icloud-sync`):
+   - Runs 3x daily (00:05, 12:05, 18:05 JST)
+   - Syncs iCloud → screenshots/inbox
+   - Auto-commits and pushes new files
+
+2. **GitHub Actions** (Modified):
+   - Triggers on push to `screenshots/inbox/**`
+   - Skips iCloud collection (handled by launchd)
+   - Processes screenshots → CSV updates
+
+#### Setup:
+```bash
+# Run setup script
+./scripts/setup-hybrid-automation.sh
+```
+
+#### Monitoring:
+- **Local logs**: `logs/icloud-sync.log`
+- **GitHub Actions**: Web interface
+- **Status check**: `launchctl list | grep com.mygym.icloud-sync`
 
 ---
 
@@ -329,5 +353,58 @@ public/
 
 ---
 
-*Last Updated: October 4, 2025*
-*Status: Active Development - CSV Update Issue Under Investigation*
+---
+
+## Implementation Log - October 4, 2025
+
+### Session: Root Cause Analysis & Hybrid Solution Implementation
+
+#### 🔍 **Critical Discovery Process**:
+1. **Initial Assumption**: GitHub Actions OCR processing failure
+2. **User Insight**: "inbox最新日付は9/22のようなので画像をiCloudからダウンロードする時点当たりから失敗"
+3. **Bias Removal**: Neutral technical analysis requested
+4. **Real Investigation**: 
+   - Found iCloud has screenshots up to Oct 2 (`2025:10:02, 8:54.png`)
+   - Local inbox stopped at Sep 22 (11-day gap)
+   - iCloud→inbox sync failing locally too
+
+#### 🎯 **Actual Root Cause**:
+```
+Problem: iCloud collection failure (both local + GitHub Actions)
+- iCloud path: /Users/i_kawano/Library/Mobile Documents/iCloud~is~workflow~my~workflows/Documents/My_Gym ✅
+- GitHub Actions: Cannot access iCloud (by design) ❌  
+- Local environment: iCloud sync not working ❌
+```
+
+#### 💡 **Solution Decision**:
+User revealed previous automation used **launchd**, leading to hybrid approach design.
+
+#### 🔧 **Implementation Steps**:
+1. **Complete Backup Created**:
+   - Local: `../crowd_data_dashboard_v2_backup_20251004_004441.tar.gz`
+   - Git: Commit `82b1509`
+   - Documentation: `docs/RESTORE_BACKUP.md`
+
+2. **Hybrid System Built**:
+   - `scripts/icloud-sync.sh` - Mac-based iCloud sync
+   - `scripts/com.mygym.icloud-sync.plist` - launchd configuration  
+   - Modified GitHub Actions for processing-only mode
+   - `scripts/setup-hybrid-automation.sh` - One-click setup
+
+3. **Architecture**:
+   ```
+   launchd (Mac) → iCloud Sync → Git Push → GitHub Actions → Processing
+   ```
+
+#### 📊 **Key Technical Insights**:
+- **GitHub Actions limitation**: iCloud access impossible in Linux containers
+- **Design flaw**: Assuming cloud CI could access local cloud storage
+- **Solution pattern**: Hybrid local+cloud automation for macOS-specific tasks
+
+#### 🎉 **Final Status**: 
+**SOLVED** - Hybrid launchd + GitHub Actions system implemented and ready for deployment.
+
+---
+
+*Last Updated: October 4, 2025*  
+*Status: ✅ **COMPLETED** - Hybrid automation system implemented*

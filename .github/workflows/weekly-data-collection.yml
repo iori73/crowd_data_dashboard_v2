@@ -1,8 +1,11 @@
-name: Weekly Gym Data Collection
+name: Gym Data Processing (Hybrid Mode)
 
 on:
+  push:
+    paths:
+      - 'screenshots/inbox/**'  # Triggered when new screenshots are pushed
   schedule:
-    # 毎週日曜日 00:01 JST (土曜日 15:01 UTC)
+    # 毎週日曜日 00:01 JST (土曜日 15:01 UTC) - Fallback processing
     - cron: '1 15 * * 6'
   workflow_dispatch: # 手動実行も可能
 

@@ -346,8 +346,12 @@ class ProductionOCRProcessor:
         try:
             print("🤖 本番用Python OCRで画像処理を開始...")
             
-            # Collect from iCloud first
-            self.collect_from_icloud()
+            # Skip iCloud collection in GitHub Actions (handled by launchd locally)
+            if os.getenv('GITHUB_ACTIONS') != 'true':
+                print("🏠 ローカル環境: iCloud収集を実行中...")
+                self.collect_from_icloud()
+            else:
+                print("☁️ GitHub Actions環境: iCloud収集をスキップ（launchdで処理済み）")
             
             # Get all image files
             if not os.path.exists(self.inbox_dir):
