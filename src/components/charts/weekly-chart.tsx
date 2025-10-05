@@ -180,8 +180,8 @@ export function WeeklyChart({ data, type = 'line', language = 'ja' }: WeeklyChar
       <div className="w-full h-full p-4 pr-10">
         <ChartComponent data={chartData} options={options} />
       </div>
-      <div className="absolute right-6" style={{ top: `${topPosition}px`, transform: 'translateY(-50%)' }}>
-        <span className="font-bold text-gray-400" style={{ fontSize: '21px' }}>
+      <div className="absolute right-4" style={{ top: `${topPosition}px`, transform: 'translateY(-50%)' }}>
+        <span className="font-bold text-gray-400" style={{ fontSize: '18px' }}>
           {averageValue}
         </span>
       </div>

@@ -84,16 +84,37 @@ AFTER_COUNT=$(find "$INBOX_PATH" -name "*.png" -o -name "*.jpg" -o -name "*.jpeg
 log "📊 Files in inbox after sync: $AFTER_COUNT"
 log "✅ New files copied: $NEW_FILES"
 
+# Create last sync marker file for tracking
+LAST_SYNC_MARKER="$PROJECT_DIR/.last_sync"
+
 # If new files were copied, commit and push to trigger GitHub Actions
 if [ "$NEW_FILES" -gt 0 ]; then
     log "🔄 Committing new screenshots to git..."
     
-    # Add new files to git
-    git add screenshots/inbox/
+    # Add new files specifically by finding them since last sync
+    if [ -f "$LAST_SYNC_MARKER" ]; then
+        # Find files newer than last sync marker
+        find "$INBOX_PATH" -name "*.png" -newer "$LAST_SYNC_MARKER" -exec git add {} \;
+        find "$INBOX_PATH" -name "*.jpg" -newer "$LAST_SYNC_MARKER" -exec git add {} \;
+        find "$INBOX_PATH" -name "*.jpeg" -newer "$LAST_SYNC_MARKER" -exec git add {} \;
+    else
+        # First run, add all current files
+        git add screenshots/inbox/*.png 2>/dev/null || true
+        git add screenshots/inbox/*.jpg 2>/dev/null || true
+        git add screenshots/inbox/*.jpeg 2>/dev/null || true
+    fi
+    
+    # List what will be committed
+    log "📋 Files staged for commit:"
+    git diff --staged --name-only | while read -r file; do
+        log "   📄 $file"
+    done
     
     # Check if there are changes to commit
     if git diff --staged --quiet; then
-        log "📭 No changes to commit"
+        log "⚠️ No changes staged for commit despite new files detected"
+        log "🔍 Running git status for debugging:"
+        git status --porcelain >> "$LOG_FILE"
     else
         # Commit with timestamp
         COMMIT_MSG="🤖 Auto-sync: $NEW_FILES new screenshots from iCloud
@@ -110,6 +131,9 @@ Co-Authored-By: Claude <noreply@anthropic.com>"
         git push
         
         log "🎉 Successfully pushed $NEW_FILES new files. GitHub Actions should start automatically."
+        
+        # Update sync marker
+        touch "$LAST_SYNC_MARKER"
     fi
 else
     log "📭 No new files to sync"

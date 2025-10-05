@@ -210,11 +210,11 @@ export default function Home() {
         </div>
       </header>
 
-      {/* Filter Bar - Hidden on mobile */}
-      <div className="bg-white dark:bg-gray-800 border-b dark:border-gray-700 hidden md:block">
+      {/* Filter Bar */}
+      <div className="bg-white dark:bg-gray-800 border-b dark:border-gray-700">
         <div className="container mx-auto px-4 py-3">
           <div className="flex items-center gap-4 flex-wrap">
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 flex-wrap">
               <Button
                 variant={currentFilter.period === 'all' ? 'default' : 'outline'}
                 size="sm"

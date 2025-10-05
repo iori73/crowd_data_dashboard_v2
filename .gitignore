@@ -41,8 +41,8 @@ yarn-error.log*
 next-env.d.ts
 
 # automation system temp files
-scripts/extracted-data.json
-scripts/weekly-report.md
+# scripts/extracted-data.json - Allow for GitHub Actions commits
+# scripts/weekly-report.md - Allow for GitHub Actions commits
 # Allow screenshot files for processing
 !screenshots/inbox/*.png
 !screenshots/inbox/*.jpg

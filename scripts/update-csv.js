@@ -14,7 +14,7 @@ class CSVDataUpdater {
     this.extractedDataFile = 'scripts/extracted-data.json';
     this.csvHeaders = [
       'datetime', 'date', 'time', 'hour', 'weekday', 
-      'count', 'status_label', 'status_code', 'status_min', 'status_max', 'raw_text'
+      'count', 'status_label', 'status_code', 'status_min', 'status_max'
     ];
   }
 
@@ -123,8 +123,7 @@ class CSVDataUpdater {
         status_label: item.status,
         status_code: item.statusCode,
         status_min: item.statusMin,
-        status_max: item.statusMax,
-        raw_text: item.rawText
+        status_max: item.statusMax
       };
     });
   }

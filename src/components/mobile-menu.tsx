@@ -1,9 +1,9 @@
 "use client"
 
 import React, { useEffect, useState } from 'react'
-import { X, Download, Globe, Palette } from 'lucide-react'
+import { X, Download, Globe, Sun, Moon } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { Language } from '@/lib/translations'
+import { Language, useTranslation } from '@/lib/translations'
 import { FilterState } from '@/lib/dataProcessor'
 import { useTheme } from 'next-themes'
 
@@ -29,6 +29,7 @@ export function MobileMenu({
   dataLength,
 }: MobileMenuProps) {
   const { theme, setTheme } = useTheme()
+  const { t } = useTranslation(currentLanguage)
   const [shouldRender, setShouldRender] = useState(false)
   const [isAnimating, setIsAnimating] = useState(false)
 
@@ -95,7 +96,7 @@ export function MobileMenu({
             <div className={`flex items-center justify-between p-4 border-b border-white/10 transition-opacity duration-500 delay-100 ${
               isAnimating ? 'opacity-100' : 'opacity-0'
             }`}>
-              <h2 className="text-lg font-semibold text-white">メニュー</h2>
+              <h2 className="text-lg font-semibold text-white">{t('menu')}</h2>
               <Button
                 variant="ghost"
                 size="sm"
@@ -121,7 +122,7 @@ export function MobileMenu({
                   disabled={dataLength === 0}
                 >
                   <Download className="w-4 h-4" />
-                  <span>CSVダウンロード</span>
+                  <span>{t('exportCSV')}</span>
                 </button>
               </div>
 
@@ -129,7 +130,7 @@ export function MobileMenu({
               <div className="flex flex-col gap-2">
                 <div className="flex items-center gap-1 text-white text-[16px] font-normal">
                   <Globe className="w-4 h-4" />
-                  <span>言語</span>
+                  <span>{t('language')}</span>
                 </div>
                 <div className="flex flex-col gap-0">
                   <button
@@ -161,53 +162,22 @@ export function MobileMenu({
                 </div>
               </div>
 
-              {/* Theme Settings */}
+              {/* Theme Toggle */}
               <div className="flex flex-col gap-2">
-                <div className="flex items-center gap-1 text-white text-[16px] font-normal">
-                  <Palette className="w-4 h-4" />
-                  <span>モード</span>
-                </div>
-                <div className="flex flex-col gap-0">
-                  <button 
-                    className={`w-full text-left px-2 py-2 rounded-lg text-[14px] font-medium transition-all duration-300 transform hover:scale-105 active:scale-95 ${
-                      theme === 'light'
-                        ? 'bg-[#364153] text-white shadow-lg'
-                        : 'text-white hover:bg-white/10'
-                    }`}
-                    onClick={() => {
-                      setTheme('light')
-                      onClose()
-                    }}
-                  >
-                    Light
-                  </button>
-                  <button 
-                    className={`w-full text-left px-2 py-2 rounded-lg text-[14px] font-medium transition-all duration-300 transform hover:scale-105 active:scale-95 ${
-                      theme === 'dark'
-                        ? 'bg-[#364153] text-white shadow-lg'
-                        : 'text-white hover:bg-white/10'
-                    }`}
-                    onClick={() => {
-                      setTheme('dark')
-                      onClose()
-                    }}
-                  >
-                    Dark
-                  </button>
-                  <button 
-                    className={`w-full text-left px-2 py-2 rounded-lg text-[14px] font-medium transition-all duration-300 transform hover:scale-105 active:scale-95 ${
-                      theme === 'system'
-                        ? 'bg-[#364153] text-white shadow-lg'
-                        : 'text-white hover:bg-white/10'
-                    }`}
-                    onClick={() => {
-                      setTheme('system')
-                      onClose()
-                    }}
-                  >
-                    System
-                  </button>
-                </div>
+                <button
+                  className="rounded-md p-2 hover:bg-white/10 transition-all duration-200 hover:scale-105 active:scale-95 text-white"
+                  onClick={() => {
+                    setTheme(theme === 'dark' ? 'light' : 'dark')
+                    onClose()
+                  }}
+                  title={t('theme')}
+                >
+                  {theme === 'dark' ? (
+                    <Sun className="w-4 h-4" />
+                  ) : (
+                    <Moon className="w-4 h-4" />
+                  )}
+                </button>
               </div>
             </div>
           </div>

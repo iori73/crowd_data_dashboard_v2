@@ -8,6 +8,9 @@ export const translations = {
     dashboardSubtitle: 'リアルタイム混雑状況の分析と可視化',
     refresh: '更新',
     exportCSV: 'CSV',
+    menu: 'メニュー',
+    language: '言語',
+    theme: 'モード',
     
     // Filter
     allPeriod: '全期間',
@@ -59,6 +62,9 @@ export const translations = {
     dashboardSubtitle: 'Real-time crowd analysis and visualization',
     refresh: 'Refresh',
     exportCSV: 'CSV',
+    menu: 'Menu',
+    language: 'Language',
+    theme: 'Theme',
     
     // Filter
     allPeriod: 'All Period',

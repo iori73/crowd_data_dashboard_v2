@@ -172,7 +172,7 @@
         );
         border-radius: 2px;
         width: 0%;
-        transition: width 0.3s ease;
+        transition: width 0.6s ease;
       }
 
       .time-markers {
@@ -326,7 +326,7 @@
             <div class="iphone-screen">
               <iframe 
                 id="dashboardIframe"
-                src="http://localhost:3001"
+                src="http://localhost:3000"
                 class="dashboard-iframe"
                 sandbox="allow-scripts allow-same-origin allow-forms"
                 loading="lazy">
@@ -345,9 +345,11 @@
           this.progress = document.getElementById('timelineProgress');
           this.iphoneContainer = document.getElementById('iphoneContainer');
           this.dashboardIframe = document.getElementById('dashboardIframe');
+          this.iphoneScreen = document.querySelector('.iphone-screen');
 
           this.isDarkMode = false;
           this.currentHour = 12; // 初期は正午12時
+          this.pendingThemeChange = null; // 遅延テーマ変更用
 
           this.init();
         }
@@ -356,6 +358,7 @@
           this.setupMouseInteraction();
           this.setupInitialState();
           this.setupDashboardTheme();
+          this.setupTransitionSynchronization();
           console.log('🌌 Clean Timeline Portfolio Thumbnail with Live Dashboard initialized!');
         }
 
@@ -373,32 +376,67 @@
         }
 
         /**
-         * ダッシュボードのテーマを更新
+         * TransitionEvent同期のセットアップ
+         */
+        setupTransitionSynchronization() {
+          this.iphoneScreen.addEventListener('transitionstart', (e) => {
+            if (e.propertyName === 'background-color') {
+              console.log('📱 iPhone screen transition START');
+            }
+          });
+
+          this.iphoneScreen.addEventListener('transitionend', (e) => {
+            if (e.propertyName === 'background-color' && this.pendingThemeChange !== null) {
+              console.log('📱 iPhone screen transition END - now updating iframe');
+              this.sendThemeChangeToIframe(this.pendingThemeChange);
+              this.pendingThemeChange = null;
+            }
+          });
+        }
+
+        /**
+         * ダッシュボードのテーマを同期更新
          */
         updateDashboardTheme(isDarkMode) {
           try {
-            console.log(`🎨 Updating theme to: ${isDarkMode ? 'dark' : 'light'}`);
+            console.log(`🎨 Preparing theme sync to: ${isDarkMode ? 'dark' : 'light'}`);
             
-            // iPhoneコンテナにダークモードクラスを適用
-            if (isDarkMode) {
-              this.iphoneContainer.classList.add('dark-mode');
+            // iPhone screenの背景色変更とiframe更新のタイミングを分離
+            const currentDarkMode = this.iphoneContainer.classList.contains('dark-mode');
+            
+            if (isDarkMode !== currentDarkMode) {
+              // Phase 1: iPhone container/screenの背景色変更開始
+              if (isDarkMode) {
+                this.iphoneContainer.classList.add('dark-mode');
+              } else {
+                this.iphoneContainer.classList.remove('dark-mode');
+              }
+              
+              // Phase 2: iframe更新を遷移完了まで遅延
+              this.pendingThemeChange = isDarkMode;
+              console.log('⏱️ iPhone screen transition started, iframe update pending...');
             } else {
-              this.iphoneContainer.classList.remove('dark-mode');
-            }
-
-            // iframe内のダッシュボードにダークモード切り替えメッセージを送信
-            if (this.dashboardIframe && this.dashboardIframe.contentWindow) {
-              const message = {
-                type: 'THEME_CHANGE',
-                theme: isDarkMode ? 'dark' : 'light'
-              };
-              console.log('📤 Sending postMessage to iframe:', message);
-              this.dashboardIframe.contentWindow.postMessage(message, '*');
-            } else {
-              console.log('⚠️ iframe or contentWindow not available');
+              // 同じテーマの場合は即座にiframe更新
+              this.sendThemeChangeToIframe(isDarkMode);
             }
           } catch (error) {
-            console.log('⚠️ Could not communicate with iframe:', error);
+            console.log('⚠️ Could not update theme:', error);
+          }
+        }
+
+        /**
+         * iframe内のダッシュボードにテーマ変更メッセージを送信
+         */
+        sendThemeChangeToIframe(isDarkMode) {
+          if (this.dashboardIframe && this.dashboardIframe.contentWindow) {
+            const message = {
+              type: 'THEME_CHANGE',
+              theme: isDarkMode ? 'dark' : 'light'
+            };
+            console.log('📤 Sending postMessage to iframe:', message);
+            this.dashboardIframe.contentWindow.postMessage(message, '*');
+          } else {
+            console.log('⚠️ iframe or contentWindow not available');
           }
         }
 
