@@ -5,8 +5,8 @@ on:
     paths:
       - 'screenshots/inbox/**'  # Triggered when new screenshots are pushed
   schedule:
-    # TEST: 木曜日 15:45 JST (06:45 UTC) - テスト実行用
-    - cron: '45 6 * * 4'
+    # TEST: 木曜日 16:25 JST (07:25 UTC) - テスト実行用
+    - cron: '25 7 * * 4'
   workflow_dispatch: # 手動実行も可能
 
 env:
