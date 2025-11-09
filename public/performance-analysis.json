@@ -1,0 +1,213 @@
+{
+  "generatedAt": "2025-11-09T08:50:59.061Z",
+  "totalRecords": 466,
+  "dateRange": {
+    "start": "2025-06-29",
+    "end": "2025-11-09",
+    "totalDays": 89
+  },
+  "crowdingPatterns": {
+    "peakHours": [
+      {
+        "hour": 18,
+        "averageCount": 30,
+        "maxCount": 42,
+        "frequency": 34
+      },
+      {
+        "hour": 21,
+        "averageCount": 28,
+        "maxCount": 40,
+        "frequency": 12
+      },
+      {
+        "hour": 19,
+        "averageCount": 26,
+        "maxCount": 45,
+        "frequency": 27
+      }
+    ],
+    "quietHours": [
+      {
+        "hour": 23,
+        "averageCount": 9,
+        "minCount": 8,
+        "frequency": 3
+      },
+      {
+        "hour": 0,
+        "averageCount": 11,
+        "minCount": 10,
+        "frequency": 4
+      },
+      {
+        "hour": 8,
+        "averageCount": 14,
+        "minCount": 5,
+        "frequency": 20
+      },
+      {
+        "hour": 7,
+        "averageCount": 15,
+        "minCount": 9,
+        "frequency": 8
+      },
+      {
+        "hour": 9,
+        "averageCount": 15,
+        "minCount": 4,
+        "frequency": 37
+      }
+    ],
+    "weekdayTrends": [
+      {
+        "weekday": "Monday",
+        "averageCount": 18,
+        "visits": 46,
+        "trend": "moderate"
+      },
+      {
+        "weekday": "Tuesday",
+        "averageCount": 21,
+        "visits": 49,
+        "trend": "busy"
+      },
+      {
+        "weekday": "Wednesday",
+        "averageCount": 15,
+        "visits": 17,
+        "trend": "moderate"
+      },
+      {
+        "weekday": "Thursday",
+        "averageCount": 19,
+        "visits": 57,
+        "trend": "moderate"
+      },
+      {
+        "weekday": "Friday",
+        "averageCount": 19,
+        "visits": 92,
+        "trend": "moderate"
+      },
+      {
+        "weekday": "Saturday",
+        "averageCount": 23,
+        "visits": 85,
+        "trend": "busy"
+      },
+      {
+        "weekday": "Sunday",
+        "averageCount": 22,
+        "visits": 120,
+        "trend": "busy"
+      }
+    ],
+    "monthlyTrends": [
+      {
+        "month": "November",
+        "averageCount": 22,
+        "visits": 30
+      },
+      {
+        "month": "August",
+        "averageCount": 21,
+        "visits": 119
+      },
+      {
+        "month": "September",
+        "averageCount": 21,
+        "visits": 95
+      },
+      {
+        "month": "October",
+        "averageCount": 21,
+        "visits": 141
+      },
+      {
+        "month": "July",
+        "averageCount": 19,
+        "visits": 76
+      },
+      {
+        "month": "June",
+        "averageCount": 14,
+        "visits": 5
+      }
+    ],
+    "crowdingDistribution": {
+      "counts": {
+        "veryQuiet": 58,
+        "quiet": 175,
+        "moderate": 200,
+        "busy": 30,
+        "veryBusy": 3
+      },
+      "percentages": {
+        "veryQuiet": 12,
+        "quiet": 38,
+        "moderate": 43,
+        "busy": 6,
+        "veryBusy": 1
+      }
+    }
+  },
+  "timeEfficiency": {
+    "bestWorkoutTimes": [
+      {
+        "hour": 0,
+        "averageCount": 11,
+        "consistency": 88,
+        "visits": 4,
+        "efficiencyScore": 69
+      },
+      {
+        "hour": 23,
+        "averageCount": 9,
+        "consistency": 84,
+        "visits": 3,
+        "efficiencyScore": 69
+      }
+    ],
+    "worstWorkoutTimes": [],
+    "weeklyEfficiency": [
+      {
+        "week": "2025-11-09",
+        "averageCount": 24,
+        "totalSessions": 4,
+        "quietSessions": 0,
+        "efficiencyRate": 0
+      },
+      {
+        "week": "2025-11-02",
+        "averageCount": 22,
+        "totalSessions": 22,
+        "quietSessions": 4,
+        "efficiencyRate": 18
+      },
+      {
+        "week": "2025-10-26",
+        "averageCount": 22,
+        "totalSessions": 16,
+        "quietSessions": 1,
+        "efficiencyRate": 6
+      },
+      {
+        "week": "2025-10-19",
+        "averageCount": 23,
+        "totalSessions": 31,
+        "quietSessions": 5,
+        "efficiencyRate": 16
+      }
+    ]
+  },
+  "recommendations": [
+    {
+      "type": "optimal_time",
+      "hour": 23,
+      "message": "23:00は平均9人で最適なワークアウト時間です",
+      "priority": "high",
+      "averageCount": 9
+    }
+  ]
+}
