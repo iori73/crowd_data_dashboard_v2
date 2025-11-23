@@ -48,3 +48,15 @@ next-env.d.ts
 !screenshots/inbox/*.jpg
 !screenshots/inbox/*.jpeg
 !screenshots/inbox/.gitkeep
+
+# IDE settings
+.vscode/
+.idea/
+
+# Log files
+logs/*.log
+
+# Test scripts
+scripts/*-test*.sh
+scripts/check-*.sh
+scripts/fix-*.sh

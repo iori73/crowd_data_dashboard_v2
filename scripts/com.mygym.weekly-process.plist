@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.mygym.weekly-process</string>
+    
+    <key>ProgramArguments</key>
+    <array>
+        <string>/bin/bash</string>
+        <string>/Users/i_kawano/Documents/crowd_data_dashboard_v2/scripts/weekly-process.sh</string>
+    </array>
+    
+    <key>StartCalendarInterval</key>
+    <dict>
+        <!-- Run every Sunday at 00:00 JST -->
+        <key>Weekday</key>
+        <integer>0</integer>
+        <key>Hour</key>
+        <integer>0</integer>
+        <key>Minute</key>
+        <integer>0</integer>
+    </dict>
+    
+    <key>StandardOutPath</key>
+    <string>/Users/i_kawano/Documents/crowd_data_dashboard_v2/logs/weekly-process-stdout.log</string>
+    
+    <key>StandardErrorPath</key>
+    <string>/Users/i_kawano/Documents/crowd_data_dashboard_v2/logs/weekly-process-stderr.log</string>
+    
+    <key>RunAtLoad</key>
+    <false/>
+    
+    <key>KeepAlive</key>
+    <false/>
+    
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>PATH</key>
+        <string>/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin</string>
+    </dict>
+</dict>
+</plist>
+

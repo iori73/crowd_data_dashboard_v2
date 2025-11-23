@@ -3,11 +3,15 @@ name: Gym Data Processing (Hybrid Mode)
 on:
   push:
     paths:
-      - 'screenshots/inbox/**'  # Triggered when new screenshots are pushed
-  schedule:
-    # TEST: 木曜日 22:05 JST (13:05 UTC) - テスト実行用
-    - cron: '5 13 * * 4'
-  workflow_dispatch: # 手動実行も可能
+      - 'screenshots/inbox/**' # メイントリガー: launchdからのpush時に実行
+      - 'public/fit_place24_data.csv' # CSV更新時にも実行（ダッシュボード再ビルド用）
+  # schedule:
+  #   # ⚠️ 無効化: launchdによる週次実行がメインのため
+  #   # GitHub Actions のスケジュール実行は信頼性が低く、
+  #   # 最大15分以上の遅延または実行されないことがあります
+  #   # 代わりに launchd (com.mygym.weekly-process) を使用
+  #   - cron: '0 15 * * 6'
+  workflow_dispatch: # 手動実行も可能（ダッシュボード再ビルド用）
 
 env:
   TZ: Asia/Tokyo
@@ -124,6 +128,15 @@ jobs:
           echo "🔍 パフォーマンス分析を実行中..."
           node scripts/performance-analyzer.js
 
+      - name: Rebuild Dashboard
+        if: always()
+        run: |
+          echo "🌐 ダッシュボードを再ビルド中..."
+          # Next.js アプリのビルド
+          npm run build
+          echo "✅ ダッシュボードの再ビルドが完了しました"
+          echo "💡 注意: デプロイは別途設定が必要です（Vercel、GitHub Pages等）"
+
       - name: Summary
         run: |
           echo "✅ 週次データ収集処理が完了しました"
@@ -133,3 +146,4 @@ jobs:
           else
             echo "📭 新しいデータはありませんでした"
           fi
+          echo "🌐 ダッシュボードの再ビルドも完了しました"

@@ -134,16 +134,16 @@ export default function Home() {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-        <div className="max-w-lg w-full bg-white rounded-lg shadow-lg p-8 text-center">
+      <div className="min-h-screen bg-gray-50 dark:bg-[#101828] flex items-center justify-center p-4">
+        <div className="max-w-lg w-full bg-white dark:bg-[#334155] rounded-lg shadow-lg p-8 text-center border border-gray-200 dark:border-white/20">
           <div className="text-red-500 mb-4">
             <svg className="w-12 h-12 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} 
                 d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-.833-2.733-.833-3.464 0L3.34 16c-.77.833.192 3 1.732 3z" />
             </svg>
           </div>
-          <h2 className="title-medium mb-2">{t('errorOccurred')}</h2>
-          <p className="body text-gray-600 mb-4">
+          <h2 className="title-medium mb-2 text-gray-900 dark:text-white">{t('errorOccurred')}</h2>
+          <p className="body text-gray-600 dark:text-[#E5E7EB] mb-4">
             {error === 'No data found' ? t('noDataFound') : 
              error === 'An error occurred' ? t('errorOccurred') : error}
           </p>
@@ -156,9 +156,9 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen bg-gray-50 dark:bg-[#101828]">
       {/* Header */}
-      <header className="bg-white dark:bg-gray-800 shadow-sm border-b dark:border-gray-700">
+      <header className="bg-white dark:bg-[#1E2939] shadow-sm border-b border-gray-200 dark:border-white/20">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div>
@@ -166,7 +166,7 @@ export default function Home() {
                 <div>{t('dashboardTitle1')}</div>
                 <div>{t('dashboardTitle2')}</div>
               </h1>
-              <p className="body text-gray-600 dark:text-gray-300 mt-1">{t('dashboardSubtitle')}</p>
+              <p className="body text-gray-600 dark:text-[#E5E7EB] mt-1">{t('dashboardSubtitle')}</p>
             </div>
             <div className="flex items-center gap-2">
               {/* Desktop buttons */}
@@ -211,7 +211,7 @@ export default function Home() {
       </header>
 
       {/* Filter Bar */}
-      <div className="bg-white dark:bg-gray-800 border-b dark:border-gray-700">
+      <div className="bg-white dark:bg-[#1E2939] border-b border-gray-200 dark:border-white/20">
         <div className="container mx-auto px-4 py-3">
           <div className="flex items-center gap-4 flex-wrap">
             <div className="flex items-center gap-2 flex-wrap">
